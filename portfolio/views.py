@@ -1,8 +1,9 @@
+from email.message import EmailMessage
 from django.shortcuts import render
 from myportfolio import settings
 from portfolio.forms import ContactForm
 from .models import Project, Skill
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 
 
 def portfolio_home(request):
@@ -26,16 +27,16 @@ def contact(request):
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             message = form.cleaned_data['message']
-            # recipient_list = [settings.EMAIL_HOST_USER]
-            send_mail(
-                subject=f"New contact form submission from: {name}",
-                message=message,
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[settings.EMAIL_HOST_USER],
-                fail_silently=False,
-            )
-            
 
+            email_message = EmailMessage(
+                subject = f"New contact form submission from: {name}",
+                body = message,
+                from_email = settings.EMAIL_HOST_USER,
+                to = [settings.EMAIL_HOST_USER],
+                reply_to = [email],
+            )
+            email_message.send(fail_silently=False)
+            
             # print(f"New message from {name} ({email}): {message}")  # For demonstration purposes only
             
             form = ContactForm()  # Reset the form after successful submission
