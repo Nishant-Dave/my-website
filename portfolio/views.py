@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from myportfolio import settings
 from portfolio.forms import ContactForm
 from .models import Project, Skill
 from django.core.mail import send_mail
@@ -25,12 +26,12 @@ def contact(request):
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             message = form.cleaned_data['message']
-            recipient_list = ['noreply@mywebsite.com']
+            # recipient_list = [settings.EMAIL_HOST_USER]
             send_mail(
-                subject=f"New contact form submission from {name}",
+                subject=f"New contact form submission from: {name}",
                 message=message,
-                from_email=email,
-                recipient_list=recipient_list,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[settings.EMAIL_HOST_USER],
                 fail_silently=False,
             )
             
