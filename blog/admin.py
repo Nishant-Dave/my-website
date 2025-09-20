@@ -3,7 +3,7 @@ from .models import Category, Post, Comment
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("name", "created_at")
+    list_display = ("name", "slug")
     search_fields = ("name",)
 
 @admin.register(Post)
@@ -14,8 +14,8 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("name", "email", "post", "created", "is_approved")
-    list_filter = ("is_approved", "created")
+    list_display = ("name", "email", "post", "created_at", "is_approved")
+    list_filter = ("is_approved", "created_at")
     search_fields = ("name", "email", "body")
     actions = ["approve_comments"]
 
