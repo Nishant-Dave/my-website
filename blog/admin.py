@@ -24,7 +24,3 @@ class CommentAdmin(admin.ModelAdmin):
     approve_comments.short_description = "Approve selected comments"
 
 
-
-# admin.site.register(Category)
-# admin.site.register(Post)
-# admin.site.register(Comment)

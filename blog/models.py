@@ -10,7 +10,7 @@ class Category(models.Model):
     
 class Post(models.Model):
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     excerpt = models.TextField(blank=True)
     content = models.TextField()

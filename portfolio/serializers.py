@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Category, Post, Comment
+from blog.models import Category, Post, Comment
+# from .models import Category, Post, Comment
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

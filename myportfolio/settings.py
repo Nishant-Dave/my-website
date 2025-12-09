@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'portfolio',
     'blog',
     'taggit',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -82,6 +83,21 @@ WSGI_APPLICATION = 'myportfolio.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.parse(config('DATABASE_URL'))
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+        
+        ]
 }
 
 
