@@ -9,6 +9,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import CategorySerializer, PostSerializer, CommentSerializer
 from blog.models import Category, Post, Comment
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 def portfolio_home(request):
