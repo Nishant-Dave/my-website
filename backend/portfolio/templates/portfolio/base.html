@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{% block title %}ND Portfolio{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="{% static 'css/home_stitch.css' %}">
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6d13ec",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#181022",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+
+        <!-- Header / Navigation -->
+        <header
+            class="sticky top-0 z-50 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 justify-between border-b border-slate-200 dark:border-primary/20">
+            <a href="{% url 'portfolio_home' %}"
+                class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 hover:bg-primary/20 transition-colors">
+                <span class="text-primary font-bold text-xl">ND</span>
+            </a>
+            <h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 ml-3 cursor-pointer"
+                onclick="window.location.href='{% url 'portfolio_home' %}'">Portfolio</h2>
+            <div class="flex items-center gap-2">
+                <button
+                    class="flex size-10 items-center justify-center rounded-full bg-slate-100 dark:bg-primary/20 text-slate-900 dark:text-slate-100">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <button
+                    class="flex size-10 items-center justify-center rounded-full bg-slate-100 dark:bg-primary/20 text-slate-900 dark:text-slate-100 transition-transform active:scale-95"
+                    onclick="document.documentElement.classList.toggle('dark')">
+                    <span class="material-symbols-outlined">light_mode</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1 pb-24">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav
+            class="fixed bottom-0 left-0 right-0 z-50 flex gap-2 border-t border-slate-200 dark:border-primary/30 bg-background-light dark:bg-background-dark/95 px-4 pb-6 pt-2 backdrop-blur-md">
+            <a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary hover:text-primary/80 transition-colors"
+                href="{% url 'portfolio_home' %}">
+                <span class="material-symbols-outlined !text-[24px]">home</span>
+                <p class="text-xs font-bold leading-normal tracking-tight">Home</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+                href="{% url 'portfolio_home' %}#projects">
+                <span class="material-symbols-outlined !text-[24px]">code</span>
+                <p class="text-xs font-medium leading-normal tracking-tight">Projects</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+                href="http://localhost:3000/blog" target="_blank">
+                <span class="material-symbols-outlined !text-[24px]">book_5</span>
+                <p class="text-xs font-medium leading-normal tracking-tight">Blog</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+                href="{% url 'contact' %}">
+                <span class="material-symbols-outlined !text-[24px]">alternate_email</span>
+                <p class="text-xs font-medium leading-normal tracking-tight">Contact</p>
+            </a>
+        </nav>
+    </div>
+</body>
+
+</html>

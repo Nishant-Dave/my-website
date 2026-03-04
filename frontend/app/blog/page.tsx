@@ -1,13 +1,19 @@
 'use client';
 
-import React from "react"
-import { Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { Search, ChevronDown } from 'lucide-react';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { Search, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { PostCard } from '@/components/PostCard';
 import { PostCardSkeleton } from '@/components/LoadingSkeleton';
 import { blogAPI } from '@/lib/api';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface Post {
   id: number;
@@ -17,7 +23,7 @@ interface Post {
   content: string;
   author: string;
   publish_date: string;
-  categories: any[];
+  category: any;
 }
 
 interface Category {
@@ -26,80 +32,81 @@ interface Category {
   slug: string;
 }
 
-interface PaginatedResponse {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Post[];
-}
-
-const Loading = () => null;
-
 export default function BlogPage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const currentPage = parseInt(searchParams.get('page') || '1');
-  const searchQuery = searchParams.get('search') || '';
-  const selectedCategory = searchParams.get('category') || '';
-  const sortBy = searchParams.get('sort') || 'newest';
-
   const [posts, setPosts] = useState<Post[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState({
-    count: 0,
-    next: null as string | null,
-    previous: null as string | null,
-  });
 
-  // Fetch categories
+  // Pagination handles
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasNext, setHasNext] = useState(false);
+  const [hasPrev, setHasPrev] = useState(false);
+
+  // Filters
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [ordering, setOrdering] = useState('-publish_date');
+
+  const fetchTimeout = useRef<NodeJS.Timeout>();
+
   useEffect(() => {
-    const fetchCategories = async () => {
+    // Fetch categories once
+    const fetchCats = async () => {
       try {
-        const response = await blogAPI.getCategories();
-        setCategories(Array.isArray(response.data) ? response.data : []);
-      } catch (error) {
-        console.error('Failed to fetch categories:', error);
+        const res = await blogAPI.getCategories();
+        setCategories(res.data);
+      } catch (e) {
+        console.error('Failed to fetch categories:', e);
       }
     };
-
-    fetchCategories();
+    fetchCats();
   }, []);
 
-  // Fetch posts
+  // Debouncing search
   useEffect(() => {
-    setLoading(true);
+    if (fetchTimeout.current) {
+      clearTimeout(fetchTimeout.current);
+    }
+    fetchTimeout.current = setTimeout(() => {
+      setDebouncedSearch(search);
+      setCurrentPage(1); // reset to page 1 on new search
+    }, 500);
+    return () => clearTimeout(fetchTimeout.current);
+  }, [search]);
+
+  // Refetch when filters or page change
+  useEffect(() => {
     const fetchPosts = async () => {
+      setLoading(true);
       try {
-        const params: Record<string, any> = {
+        const params: any = {
           page: currentPage,
+          ordering: ordering,
         };
 
-        if (searchQuery) {
-          params.search = searchQuery;
+        if (debouncedSearch) {
+          params.search = debouncedSearch;
         }
 
         if (selectedCategory) {
-          params.categories = selectedCategory;
+          params.categories = selectedCategory; // Use ID, not slug
         }
 
-        if (sortBy === 'newest') {
-          params.ordering = '-publish_date';
-        } else if (sortBy === 'oldest') {
-          params.ordering = 'publish_date';
-        } else if (sortBy === 'title') {
-          params.ordering = 'title';
+        const res = await blogAPI.getPosts(params);
+
+        // Handle DRF PageNumberPagination format
+        const data = res.data;
+        if (data && data.results !== undefined) {
+          setPosts(data.results);
+          setHasNext(!!data.next);
+          setHasPrev(!!data.previous);
+        } else {
+          // Fallback if not paginated
+          setPosts(Array.isArray(data) ? data : []);
+          setHasNext(false);
+          setHasPrev(false);
         }
-
-        const response = await blogAPI.getPosts(params);
-        const data: PaginatedResponse = response.data;
-
-        setPosts(data.results || []);
-        setPagination({
-          count: data.count || 0,
-          next: data.next || null,
-          previous: data.previous || null,
-        });
       } catch (error) {
         console.error('Failed to fetch posts:', error);
       } finally {
@@ -108,185 +115,177 @@ export default function BlogPage() {
     };
 
     fetchPosts();
-  }, [currentPage, searchQuery, selectedCategory, sortBy]);
-
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const search = formData.get('search') as string;
-    const params = new URLSearchParams();
-    params.set('search', search);
-    params.set('page', '1');
-    router.push(`/blog?${params.toString()}`);
-  };
-
-  const handleCategoryChange = (categoryId: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (categoryId === '') {
-      params.delete('category');
-    } else {
-      params.set('category', categoryId);
-    }
-    params.set('page', '1');
-    router.push(`/blog?${params.toString()}`);
-  };
-
-  const handleSortChange = (sort: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('sort', sort);
-    params.set('page', '1');
-    router.push(`/blog?${params.toString()}`);
-  };
-
-  const handlePageChange = (direction: 'next' | 'previous') => {
-    const newPage = direction === 'next' ? currentPage + 1 : currentPage - 1;
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('page', newPage.toString());
-    router.push(`/blog?${params.toString()}`);
-  };
+  }, [currentPage, debouncedSearch, selectedCategory, ordering]);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold text-foreground mb-8">Blog</h1>
-
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Sidebar */}
-        <aside className="lg:w-64 flex-shrink-0">
-          {/* Search */}
-          <form onSubmit={handleSearch} className="mb-8">
-            <div className="relative">
-              <Search
-                size={20}
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
-              />
-              <input
-                type="text"
-                name="search"
-                defaultValue={searchQuery}
-                placeholder="Search posts..."
-                className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-            <Button type="submit" className="w-full mt-2">
-              Search
-            </Button>
-          </form>
-
-          {/* Categories */}
-          <div className="bg-card border border-border rounded-lg p-4">
-            <h3 className="font-semibold text-foreground mb-4">Categories</h3>
-            <div className="space-y-2">
-              <button
-                onClick={() => handleCategoryChange('')}
-                className={`block w-full text-left px-3 py-2 rounded transition-colors ${
-                  selectedCategory === ''
-                    ? 'bg-primary text-primary-foreground'
-                    : 'hover:bg-muted text-foreground'
-                }`}
-              >
-                All Categories
-              </button>
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => handleCategoryChange(category.id.toString())}
-                  className={`block w-full text-left px-3 py-2 rounded transition-colors ${
-                    selectedCategory === category.id.toString()
-                      ? 'bg-primary text-primary-foreground'
-                      : 'hover:bg-muted text-foreground'
-                  }`}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
+    <div className="max-w-6xl mx-auto px-4 py-12 flex flex-col md:flex-row gap-8">
+      {/* Sidebar (Categories & Search for Mobile config) */}
+      <aside className="w-full md:w-64 shrink-0 space-y-8">
+        <div>
+          <h3 className="font-semibold text-lg mb-4 text-foreground">Search</h3>
+          <div className="relative">
+            <Search
+              size={18}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            />
+            <Input
+              type="text"
+              placeholder="Search posts..."
+              className="pl-10"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-        </aside>
-
-        {/* Main Content */}
-        <div className="flex-1">
-          {/* Sorting */}
-          <div className="mb-8 flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Sort by:</span>
-            <div className="relative inline-block">
-              <select
-                value={sortBy}
-                onChange={(e) => handleSortChange(e.target.value)}
-                className="appearance-none px-4 py-2 bg-card border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary pr-8"
-              >
-                <option value="newest">Newest First</option>
-                <option value="oldest">Oldest First</option>
-                <option value="title">Title (A-Z)</option>
-              </select>
-              <ChevronDown
-                size={16}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none text-muted-foreground"
-              />
-            </div>
-          </div>
-
-          {/* Posts Grid */}
-          <Suspense fallback={<div>Loading...</div>}>
-            {loading ? (
-              <div className="space-y-6">
-                {[1, 2, 3].map((i) => (
-                  <PostCardSkeleton key={i} />
-                ))}
-              </div>
-            ) : posts.length > 0 ? (
-              <div className="space-y-6">
-                {posts.map((post) => (
-                  <PostCard
-                    key={post.id}
-                    title={post.title}
-                    slug={post.slug}
-                    excerpt={post.excerpt}
-                    content={post.content}
-                    author={post.author}
-                    publishDate={post.publish_date}
-                    categories={post.categories}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground mb-4">
-                  No posts found matching your criteria.
-                </p>
-                <Button
-                  variant="outline"
-                  onClick={() => router.push('/blog')}
-                >
-                  Clear filters
-                </Button>
-              </div>
-            )}
-          </Suspense>
-
-          {/* Pagination */}
-          {!loading && posts.length > 0 && (
-            <div className="mt-12 flex gap-4 justify-center">
-              <Button
-                variant="outline"
-                onClick={() => handlePageChange('previous')}
-                disabled={!pagination.previous}
-              >
-                Previous
-              </Button>
-              <span className="flex items-center text-muted-foreground">
-                Page {currentPage}
-              </span>
-              <Button
-                variant="outline"
-                onClick={() => handlePageChange('next')}
-                disabled={!pagination.next}
-              >
-                Next
-              </Button>
-            </div>
-          )}
         </div>
-      </div>
+
+        <div>
+          <h3 className="font-semibold text-lg mb-4 text-foreground">
+            Categories
+          </h3>
+          <div className="flex flex-wrap md:flex-col gap-2">
+            <Button
+              variant={selectedCategory === null ? 'default' : 'ghost'}
+              className="justify-start w-full"
+              onClick={() => {
+                setSelectedCategory(null);
+                setCurrentPage(1);
+              }}
+            >
+              All Posts
+            </Button>
+            {categories.map((cat) => (
+              <Button
+                key={cat.id}
+                variant={selectedCategory === cat.id ? 'default' : 'ghost'}
+                className="justify-start w-full"
+                onClick={() => {
+                  setSelectedCategory(cat.id);
+                  setCurrentPage(1);
+                }}
+              >
+                {cat.name}
+              </Button>
+            ))}
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 min-w-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 border-b border-border pb-4">
+          <h1 className="text-3xl font-bold text-foreground">Blog</h1>
+          <div className="w-48">
+            <Select
+              value={ordering}
+              onValueChange={(val) => {
+                setOrdering(val);
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="-publish_date">Newest First</SelectItem>
+                <SelectItem value="publish_date">Oldest First</SelectItem>
+                <SelectItem value="title">Title (A-Z)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Active Filters Display */}
+        {(debouncedSearch || selectedCategory) && (
+          <div className="flex items-center gap-2 mb-6 flex-wrap">
+            <span className="text-sm text-muted-foreground">Showing results for:</span>
+            {debouncedSearch && (
+              <span className="inline-flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-sm">
+                "{debouncedSearch}"
+                <button onClick={() => setSearch('')} className="hover:text-foreground">
+                  <X size={14} />
+                </button>
+              </span>
+            )}
+            {selectedCategory && (
+              <span className="inline-flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-sm">
+                Category: {categories.find((c) => c.id === selectedCategory)?.name || '...'}
+                <button onClick={() => setSelectedCategory(null)} className="hover:text-foreground">
+                  <X size={14} />
+                </button>
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Posts Grid */}
+        {loading ? (
+          <div className="grid md:grid-cols-2 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <PostCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : posts.length > 0 ? (
+          <div className="grid md:grid-cols-2 gap-6">
+            {posts.map((post) => (
+              <PostCard
+                key={post.id}
+                title={post.title}
+                slug={post.slug}
+                excerpt={post.excerpt}
+                content={post.content}
+                author={post.author}
+                publishDate={post.publish_date}
+                categories={post.category ? [post.category] : []}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 border border-dashed border-border rounded-lg">
+            <p className="text-muted-foreground text-lg mb-2">
+              No posts found.
+            </p>
+            <p className="text-muted-foreground text-sm">
+              Try adjusting your search or category filter.
+            </p>
+            <Button
+              variant="outline"
+              className="mt-6"
+              onClick={() => {
+                setSearch('');
+                setSelectedCategory(null);
+                setOrdering('-publish_date');
+              }}
+            >
+              Clear all filters
+            </Button>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {(hasPrev || hasNext) && !loading && (
+          <div className="flex items-center justify-between mt-12 pt-6 border-t border-border">
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage((p) => p - 1)}
+              disabled={!hasPrev}
+            >
+              <ChevronLeft size={16} className="mr-2" />
+              Previous
+            </Button>
+            <span className="text-sm text-muted-foreground">
+              Page {currentPage}
+            </span>
+            <Button
+              variant="outline"
+              onClick={() => setCurrentPage((p) => p + 1)}
+              disabled={!hasNext}
+            >
+              Next
+              <ChevronRight size={16} className="ml-2" />
+            </Button>
+          </div>
+        )}
+      </main>
     </div>
   );
 }

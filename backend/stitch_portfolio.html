@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Portfolio Home Screen</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#6d13ec",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#181022",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+        <!-- Header / Navigation -->
+        <header
+            class="sticky top-0 z-50 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 justify-between border-b border-slate-200 dark:border-primary/20">
+            <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                <span class="text-primary font-bold text-xl">ND</span>
+            </div>
+            <h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 ml-3">
+                Portfolio</h2>
+            <div class="flex items-center gap-2">
+                <button
+                    class="flex size-10 items-center justify-center rounded-full bg-slate-100 dark:bg-primary/20 text-slate-900 dark:text-slate-100">
+                    <span class="material-symbols-outlined">search</span>
+                </button>
+                <button
+                    class="flex size-10 items-center justify-center rounded-full bg-slate-100 dark:bg-primary/20 text-slate-900 dark:text-slate-100">
+                    <span class="material-symbols-outlined">light_mode</span>
+                </button>
+            </div>
+        </header>
+        <main class="flex-1 pb-24">
+            <!-- Hero Section -->
+            <section class="@container">
+                <div class="flex flex-col gap-6 px-4 py-8 @[480px]:gap-8">
+                    <div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl shadow-2xl shadow-primary/20"
+                        data-alt="Laptop with code on screen and purple lighting"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB3wXSn4EPsQ-xxQXzHzgg69ELsztEAdMESLprpsB7MSYZW2Wjl4wrPwtLiAiPwId8DEkr4WUvhGS1KGQi_IVxD7Np4rgf-DFp7CCCKRb5aR85eUhlCGa2-zZEb2h8UHk-vDKcLRNYrvLWSTorGSTm37QDNcEVwbQTF0vLnFz00MBUEEBdW1v_yRAB0bKPod4JOnOEkeMBsPjkes0-4Etlcqg7M1cCXny01gJxDwFnNWtDbLQ6PRXcfVKHIttArVwkFzP2ufuFFZZit");'>
+                    </div>
+                    <div class="flex flex-col gap-6">
+                        <div class="flex flex-col gap-3 text-left">
+                            <h1
+                                class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-tight @[480px]:text-5xl">
+                                Building robust web solutions with <span class="text-primary">Django</span>
+                            </h1>
+                            <p class="text-slate-600 dark:text-slate-400 text-base font-normal leading-relaxed">
+                                Full-stack developer specializing in scalable REST APIs and modern front-end
+                                experiences. Crafting elegant code for complex problems.
+                            </p>
+                        </div>
+                        <div class="flex flex-row gap-3">
+                            <button
+                                class="flex-1 flex items-center justify-center rounded-xl h-12 bg-primary text-white text-sm font-bold tracking-wide">
+                                <span>View Projects</span>
+                            </button>
+                            <button
+                                class="flex-1 flex items-center justify-center rounded-xl h-12 bg-slate-200 dark:bg-primary/20 text-slate-900 dark:text-white text-sm font-bold tracking-wide">
+                                <span>Read Blog</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Recent Projects Preview -->
+            <section class="px-4 py-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-slate-900 dark:text-white text-xl font-bold tracking-tight">Recent Projects</h2>
+                    <a class="text-primary text-sm font-semibold" href="#">See all</a>
+                </div>
+                <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                    <div
+                        class="min-w-[280px] bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10 overflow-hidden">
+                        <div class="h-32 bg-cover bg-center" data-alt="Dashboard data visualization interface"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCuN7HTq71M-f0WIEUPpl5vcSPJtzDTVi3VydjXU2FoAAdrGqXdlIzBE0o9pXLEYgIkxtDaTPrmwlVlk58CLJSYc8H9gSyCppIDT36qUZnQmy__ALHnlzg435uQpAjXg1hNr3YxHvN6oCd14x8Fs4mvPEQEmrg0Ond6jKJD5uPMYi022X-V2jFoRidINMSLw5elBp5kDXowji2vPGo_FCQCf1mAf9BQranJ-8voLzEf5biwul7oac3P5-V-XIfPquADox2kT4nEddwT')">
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-slate-900 dark:text-white">Analytics Engine</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Django • React • PostgreSQL</p>
+                        </div>
+                    </div>
+                    <div
+                        class="min-w-[280px] bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10 overflow-hidden">
+                        <div class="h-32 bg-cover bg-center" data-alt="Mobile app interface design"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDkGDnZKeaqdpXCADIe37yeBPyWh6ETJhsSpKiJN6J6Z9PwAF3fjUkrTOE7xzXNYIsq80m3_oeNQi3VI-uX8N1dy_uKzyR4VPWqFtlsVsBJYiQ8ZvV3am2scf_4OWp7pveXlCHAWs4kyoEzvEZW3sGgzCCBqlAq9iv2exaCwunpwWjS6CWJBbkGU996U0Mr2csTRQAI0AEAwFvhT8zL9lf2bCzWI2fJ-wTKqvPYPxmRG0OedCtXz9IysUOOKEo8AP4N0mySBA8Qa5hl')">
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-slate-900 dark:text-white">Fintech API</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Django REST • Redis • Docker</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Featured Posts -->
+            <section class="px-4 py-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-slate-900 dark:text-white text-xl font-bold tracking-tight">Featured Posts</h2>
+                    <a class="text-primary text-sm font-semibold" href="#">View Blog</a>
+                </div>
+                <div class="grid grid-cols-1 gap-4">
+                    <!-- Post Card 1 -->
+                    <div
+                        class="flex flex-col gap-3 p-4 bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold uppercase rounded">Django</span>
+                            <span class="text-slate-400 text-xs font-medium">Oct 12, 2023</span>
+                        </div>
+                        <h3 class="text-lg font-bold leading-tight text-slate-900 dark:text-white">Scaling Django Rest
+                            Framework for High Traffic</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">Learn the best practices for
+                            optimizing your serializers and implementing effective caching strategies in production
+                            environments.</p>
+                        <div class="flex items-center gap-2 mt-2">
+                            <div
+                                class="size-6 rounded-full bg-slate-200 dark:bg-primary/30 flex items-center justify-center overflow-hidden">
+                                <img alt="Author" class="w-full h-full object-cover"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAoX1irwyCbMgwIqojzGN_kmBmDcjb_6WajRpT_bv9ILg_Cel6zdLO5CZ9c7kAILiWRF9f72ikDG7zBaXsAiM20WociNlDfnRJWljy343kj-PmEa6veJNlPP022QUPYbQtIUELPGQOhbYxqQosPNsFhBXUOeE6XOUZXZGl1UitO5g_ZMc4MLZWqziFf87w0Hgd5oa4vbhWd9K9vu2y8frE8rPE32o0AUlr_q_ya1erLpaZ4qBuaDt-usdXNZbW4pDuL0PX25ZUyx02" />
+                            </div>
+                            <span class="text-xs font-medium text-slate-700 dark:text-slate-300">John Doe</span>
+                        </div>
+                    </div>
+                    <!-- Post Card 2 -->
+                    <div
+                        class="flex flex-col gap-3 p-4 bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold uppercase rounded">Architecture</span>
+                            <span class="text-slate-400 text-xs font-medium">Oct 05, 2023</span>
+                        </div>
+                        <h3 class="text-lg font-bold leading-tight text-slate-900 dark:text-white">Microservices vs.
+                            Monoliths: A Practical Guide</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">Deciding between a monolithic
+                            architecture and microservices can be tough. We break down the trade-offs based on
+                            real-world scenarios.</p>
+                        <div class="flex items-center gap-2 mt-2">
+                            <div
+                                class="size-6 rounded-full bg-slate-200 dark:bg-primary/30 flex items-center justify-center overflow-hidden">
+                                <img alt="Author" class="w-full h-full object-cover"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGEo8yL3jMse6q81T6griyJgMPO2KWRjk7rzuZ1WVOrpiToP-i9-786Fl0774y0M3n2y2BqHPmvYJWyRHmGXsazzLFPLJ5DUs68qTiqdO4gdioSRIOVSBzm5R-Ii5Yr5I8Z2w31BVfZP-Pnr1w36vtcYioDjiMgnllEpK6GNM6l4KtuCVBwnIvUX1AjDTHU2eNf3JAGz40bnDumAy7sV1A0JJxw3BE1lbj0yevfXCJtfFqjfMiv5HcBSbEFF7xMOvliS7bTa0QCwZM" />
+                            </div>
+                            <span class="text-xs font-medium text-slate-700 dark:text-slate-300">John Doe</span>
+                        </div>
+                    </div>
+                    <!-- Post Card 3 -->
+                    <div
+                        class="flex flex-col gap-3 p-4 bg-white dark:bg-primary/5 rounded-xl border border-slate-200 dark:border-primary/10">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold uppercase rounded">Frontend</span>
+                            <span class="text-slate-400 text-xs font-medium">Sep 28, 2023</span>
+                        </div>
+                        <h3 class="text-lg font-bold leading-tight text-slate-900 dark:text-white">Advanced Tailwind CSS
+                            Layout Patterns</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2">Exploring complex grid
+                            systems and container queries to build truly responsive and modern user interfaces.</p>
+                        <div class="flex items-center gap-2 mt-2">
+                            <div
+                                class="size-6 rounded-full bg-slate-200 dark:bg-primary/30 flex items-center justify-center overflow-hidden">
+                                <img alt="Author" class="w-full h-full object-cover"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9bF-WvPo83zTCytvxggMQRhluqG3QGaIlyDXM8bxs1svF-h4s3VPPdUCu2fDGaP1vN0tAYOEuRgBefNRF7zOnKnO8FTCBdWkX_3NGnCK6ybxyI-Nty8DXWf5ZlQFvD7jF4wDVjcubDpKtM3XN9rrECEgLFlZ99W3kBrdCjX7xpa7PSsbxwHsT89kxoliuYH6uOsS88M4hSE9oKf_12UXlK9Td29t-IvHKf-NUw4X0v3EPn6vifa_PJPfHjWHf39Vmg0QiIq9x5QJe" />
+                            </div>
+                            <span class="text-xs font-medium text-slate-700 dark:text-slate-300">John Doe</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <!-- Bottom Navigation Bar -->
+        <nav
+            class="fixed bottom-0 left-0 right-0 z-50 flex gap-2 border-t border-slate-200 dark:border-primary/30 bg-background-light dark:bg-background-dark/95 px-4 pb-6 pt-2 backdrop-blur-md">
+            <a class="flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+                <span class="material-symbols-outlined !text-[24px]">home</span>
+                <p class="text-xs font-bold leading-normal tracking-tight">Home</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400"
+                href="#">
+                <span class="material-symbols-outlined !text-[24px]">code</span>
+                <p class="text-xs font-medium leading-normal tracking-tight">Projects</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400"
+                href="#">
+                <span class="material-symbols-outlined !text-[24px]">book_5</span>
+                <p class="text-xs font-medium leading-normal tracking-tight">Blog</p>
+            </a>
+            <a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400"
+                href="#">
+                <span class="material-symbols-outlined !text-[24px]">alternate_email</span>
+                <p class="text-xs font-medium leading-normal tracking-tight">Contact</p>
+            </a>
+        </nav>
+    </div>
+</body>
+
+</html>

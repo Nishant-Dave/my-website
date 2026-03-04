@@ -15,7 +15,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 def portfolio_home(request):
     projects = Project.objects.all()
     skills = Skill.objects.all()
-    return render(request, 'portfolio/home.html', {'projects': projects, 'skills': skills})
+    posts = Post.objects.filter(published=True).order_by('-published_date')[:3]
+    return render(request, 'portfolio/home.html', {
+        'projects': projects, 
+        'skills': skills,
+        'posts': posts
+    })
 
 def project_detail(request, slug):
     project = Project.objects.get(slug=slug)

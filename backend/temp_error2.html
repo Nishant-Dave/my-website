@@ -1,0 +1,305 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+
+      
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="robots" content="NONE,NOARCHIVE" />
+      
+
+      <title>Post List – Django REST framework</title>
+
+      
+        
+          <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/bootstrap.min.css"/>
+          <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/bootstrap-tweaks.css"/>
+        
+
+        <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/prettify.css"/>
+        <link rel="stylesheet" type="text/css" href="/static/rest_framework/css/default.css"/>
+        
+      
+
+    
+  </head>
+
+  
+  <body class="">
+
+    <div class="wrapper">
+      
+        <div class="navbar navbar-static-top navbar-inverse"
+             role="navigation" aria-label="navbar">
+          <div class="container">
+            <span>
+              
+                <a class='navbar-brand' rel="nofollow" href='https://www.django-rest-framework.org/'>
+                    Django REST framework
+                </a>
+              
+            </span>
+            <ul class="nav navbar-nav pull-right">
+              
+                
+                  
+                
+              
+            </ul>
+          </div>
+        </div>
+      
+
+      <div class="container">
+        
+          <ul class="breadcrumb">
+            
+              
+                <li class="active"><a href="/posts/">Post List</a></li>
+              
+            
+          </ul>
+        
+
+        <!-- Content -->
+        <div id="content" role="main" aria-label="content">
+          
+
+          <div class="region"  aria-label="request form">
+          
+
+          
+            <form id="get-form" class="pull-right">
+              <fieldset>
+                
+                  <div class="btn-group format-selection">
+                    <a class="btn btn-primary js-tooltip" href="/posts/" rel="nofollow" title="Make a GET request on the Post List resource">GET</a>
+
+                    <button class="btn btn-primary dropdown-toggle js-tooltip" data-toggle="dropdown" title="Specify a format for the GET request">
+                      <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      
+                        <li>
+                          <a class="js-tooltip format-option" href="/posts/?format=json" rel="nofollow" title="Make a GET request on the Post List resource with the format set to `json`">json</a>
+                        </li>
+                      
+                        <li>
+                          <a class="js-tooltip format-option" href="/posts/?format=api" rel="nofollow" title="Make a GET request on the Post List resource with the format set to `api`">api</a>
+                        </li>
+                      
+                    </ul>
+                  </div>
+                
+              </fieldset>
+            </form>
+          
+
+          
+            <form class="button-form" action="/posts/" data-method="OPTIONS">
+              <button class="btn btn-primary js-tooltip" title="Make an OPTIONS request on the Post List resource">OPTIONS</button>
+            </form>
+          
+
+          
+
+          
+
+          
+            <button style="float: right; margin-right: 10px" data-toggle="modal" data-target="#filtersModal" class="btn btn-default">
+              <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+              Filters
+            </button>
+          
+
+          
+          </div>
+
+            <div class="content-main" role="main"  aria-label="main content">
+              <div class="page-header">
+                <h1>Post List</h1>
+              </div>
+              <div class="pull-left">
+                
+                  
+                
+              </div>
+
+              
+
+              <div class="request-info" aria-label="request info">
+                <pre class="prettyprint"><b>GET</b> /posts/</pre>
+              </div>
+
+              <div class="response-info" aria-label="response info">
+                <pre class="prettyprint"><span class="meta nocode"><b>HTTP 200 OK</b>
+<b>Allow:</b> <span class="lit">GET, POST, HEAD, OPTIONS</span>
+<b>Content-Type:</b> <span class="lit">application/json</span>
+<b>Vary:</b> <span class="lit">Accept</span>
+
+</span>{
+    &quot;count&quot;: 2,
+    &quot;next&quot;: null,
+    &quot;previous&quot;: null,
+    &quot;results&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;author&quot;: &quot;admin&quot;,
+            &quot;title&quot;: &quot;The Wonders of AI: Your New Creative Partner&quot;,
+            &quot;slug&quot;: &quot;wonders-of-AI&quot;,
+            &quot;excerpt&quot;: &quot;Artificial Intelligence is no longer just science fiction; it&#x27;s a part of our daily lives, quietly working wonders in the background. From suggesting the perfect song for your mood to helping scientists discover new medicines, AI is a powerful tool for problem-solving. But...&quot;,
+            &quot;content&quot;: &quot;Artificial Intelligence is no longer just science fiction; it&#x27;s a part of our daily lives, quietly working wonders in the background. From suggesting the perfect song for your mood to helping scientists discover new medicines, AI is a powerful tool for problem-solving. But perhaps its most exciting frontier is creativity. AI can now generate stunning artwork from a simple sentence, compose music, and even help write stories. Instead of replacing human creativity, it&#x27;s becoming a powerful partner, helping us overcome creative blocks and explore ideas we never thought possible. The true wonder of AI is its ability to augment our own intelligence, opening up a new era of innovation and artistry for everyone.&quot;,
+            &quot;published&quot;: true,
+            &quot;published_date&quot;: &quot;2025-10-10T07:04:39Z&quot;,
+            &quot;tags&quot;: [
+                &quot;AI&quot;,
+                &quot;tech&quot;
+            ],
+            &quot;category&quot;: {
+                &quot;id&quot;: 2,
+                &quot;name&quot;: &quot;Tech&quot;,
+                &quot;slug&quot;: &quot;tech&quot;
+            },
+            &quot;created_at&quot;: &quot;2025-10-10T07:05:27.627512Z&quot;,
+            &quot;updated_at&quot;: &quot;2025-10-10T07:05:27.627530Z&quot;
+        },
+        {
+            &quot;id&quot;: 2,
+            &quot;author&quot;: &quot;admin&quot;,
+            &quot;title&quot;: &quot;A Healthy Lifestyle: Small Steps, Big Rewards&quot;,
+            &quot;slug&quot;: &quot;healthy-lifestyle&quot;,
+            &quot;excerpt&quot;: &quot;In our busy lives, achieving a \&quot;healthy lifestyle\&quot; can feel like an impossible goal. But it doesn&#x27;t have to be. The secret isn&#x27;t in drastic changes, but in small, consistent choices that add up over time.&quot;,
+            &quot;content&quot;: &quot;In our busy lives, achieving a \&quot;healthy lifestyle\&quot; can feel like an impossible goal. But it doesn&#x27;t have to be. The secret isn&#x27;t in drastic changes, but in small, consistent choices that add up over time. Start with three simple pillars: Eat Mindfully, Move Daily, and Rest Well. Choose whole foods that energize you. Find a form of movement you genuinely enjoy—a brisk walk, dancing in your living room, or a quick stretch. Prioritize sleep, giving your body and mind the time they need to recharge. These aren&#x27;t revolutionary ideas, but when practiced consistently, they form the foundation of lasting health and vitality. Your journey to a healthier lifestyle begins not with a giant leap, but with a single, mindful step today.&quot;,
+            &quot;published&quot;: true,
+            &quot;published_date&quot;: &quot;2025-10-10T07:07:01Z&quot;,
+            &quot;tags&quot;: [
+                &quot;fitness&quot;,
+                &quot;health&quot;
+            ],
+            &quot;category&quot;: {
+                &quot;id&quot;: 1,
+                &quot;name&quot;: &quot;random&quot;,
+                &quot;slug&quot;: &quot;random&quot;
+            },
+            &quot;created_at&quot;: &quot;2025-10-10T07:07:06.650968Z&quot;,
+            &quot;updated_at&quot;: &quot;2025-10-10T07:07:06.650983Z&quot;
+        }
+    ]
+}</pre>
+              </div>
+            </div>
+
+            
+              
+
+              
+            
+          
+        </div><!-- /.content -->
+      </div><!-- /.container -->
+    </div><!-- ./wrapper -->
+
+    
+      <div class="modal fade" id="filtersModal" tabindex="-1" role="dialog" aria-labelledby="filters" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Filters</h4>
+    </div>
+      <div class="modal-body">
+          
+          
+          
+<h2>Field filters</h2>
+<form class="form" action="" method="get">
+    <p>
+    <label for="id_category__name">Category name:</label>
+    <input type="text" name="category__name" id="id_category__name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_created_at">Created at:</label>
+    <input type="text" name="created_at" id="id_created_at">
+    
+    
+      
+    
+  </p>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+          
+          <hr/>
+          
+<h2>Search</h2>
+<form class="form-inline">
+  <div class="form-group">
+    <div class="input-group">
+      <input type="text" class="form-control" style="width: 350px" name="search" value="">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</button>
+      </span>
+    </div>
+  </div>
+</form>
+
+          
+          <hr/>
+          
+
+<h2>Ordering</h2>
+<div class="list-group">
+    
+        
+            <a href="/posts/?ordering=created_at" class="list-group-item">created_at - ascending</a>
+        
+    
+        
+            <a href="/posts/?ordering=-created_at" class="list-group-item">created_at - descending</a>
+        
+    
+        
+            <a href="/posts/?ordering=updated_at" class="list-group-item">updated_at - ascending</a>
+        
+    
+        
+            <a href="/posts/?ordering=-updated_at" class="list-group-item">updated_at - descending</a>
+        
+    
+</div>
+
+          
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+      <script type="application/json" id="drf_csrf">
+        {
+          "csrfHeaderName": "X-CSRFTOKEN",
+          "csrfToken": "3IqtkZo3JFqW456z4mcZSrTLssL13itUCgcnGVgHPXJZiRNHCpZCZuKHQHGmcuYf"
+        }
+      </script>
+      <script src="/static/rest_framework/js/jquery-3.7.1.min.js"></script>
+      <script src="/static/rest_framework/js/ajax-form.js"></script>
+      <script src="/static/rest_framework/js/csrf.js"></script>
+      <script src="/static/rest_framework/js/bootstrap.min.js"></script>
+      <script src="/static/rest_framework/js/prettify-min.js"></script>
+      <script src="/static/rest_framework/js/default.js"></script>
+      <script src="/static/rest_framework/js/load-ajax-form.js"></script>
+    
+
+  </body>
+  
+</html>

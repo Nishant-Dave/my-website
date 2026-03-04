@@ -8,8 +8,9 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'slug']
 
 class PostSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(many=True, read_only=True)
+    category = CategorySerializer(read_only=True)
     author = serializers.StringRelatedField()
+    tags = serializers.StringRelatedField(many=True, read_only=True)
     class Meta:
         model = Post
         fields = [

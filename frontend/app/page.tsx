@@ -16,7 +16,7 @@ interface Post {
   content: string;
   author: string;
   publish_date: string;
-  categories: any[];
+  category: any;
 }
 
 export default function HomePage() {
@@ -28,10 +28,10 @@ export default function HomePage() {
       try {
         const response = await blogAPI.getPosts({
           ordering: '-publish_date',
-          page: 1,
+          limit: 3, // Assuming DRF handles limit natively or via pagination class
         });
-        // Handle both paginated and non-paginated responses
         const data = response.data.results || response.data;
+        // In case DRF doesn't handle `limit`, we can still slice, but we requested `limit: 3` via API.
         setPosts(Array.isArray(data) ? data.slice(0, 3) : []);
       } catch (error) {
         console.error('Failed to fetch posts:', error);
@@ -55,14 +55,16 @@ export default function HomePage() {
           technology, and more.
         </p>
         <div className="flex gap-4 justify-center flex-wrap">
-          <Link href="/blog">
-            <Button size="lg">
+          <Button size="lg" asChild>
+            <Link href="/blog">
               Read My Blog
               <ArrowRight size={20} className="ml-2" />
-            </Button>
-          </Link>
-          <Button variant="outline" size="lg">
-            View My Projects
+            </Link>
+          </Button>
+          <Button variant="outline" size="lg" asChild>
+            <Link href="/portfolio">
+              View My Projects
+            </Link>
           </Button>
         </div>
       </section>
@@ -90,21 +92,21 @@ export default function HomePage() {
                 content={post.content}
                 author={post.author}
                 publishDate={post.publish_date}
-                categories={post.categories}
+                categories={post.category ? [post.category] : []}
               />
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
+          <div className="text-center py-12 border border-dashed border-border rounded-lg">
             <p className="text-muted-foreground mb-4">
               No articles published yet.
             </p>
-            <Link href="/blog">
-              <Button variant="outline">
+            <Button variant="outline" asChild>
+              <Link href="/blog">
                 Check back soon
                 <ArrowRight size={16} className="ml-2" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         )}
       </section>
@@ -112,7 +114,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="mt-20 border-t border-border py-8">
         <div className="max-w-4xl mx-auto px-4 text-center text-muted-foreground text-sm">
-          <p>© 2026 My Portfolio. Built with Next.js and Django.</p>
+          <p>© {new Date().getFullYear()} My Portfolio. Built with Next.js and Django.</p>
         </div>
       </footer>
     </div>

@@ -1,12 +1,12 @@
 'use client';
 
-import React from "react"
-
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock, AlertCircle } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { authAPI } from '@/lib/api';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { adminAPI } from '@/lib/api';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -15,25 +15,29 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
+    setError('');
 
     try {
-      const response = await authAPI.login(username, password);
-      const { access, refresh } = response.data;
+      const response = await adminAPI.login({ username, password });
 
-      // Store tokens
-      localStorage.setItem('access_token', access);
-      localStorage.setItem('refresh_token', refresh);
+      // Save tokens to localStorage (client-side only execution)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('access_token', response.data.access);
+        if (response.data.refresh) {
+          localStorage.setItem('refresh_token', response.data.refresh);
+        }
+      }
 
-      // Redirect to moderation page
-      router.push('/admin/moderation');
+      // Hard redirect to clear any app state and trigger layout remounts if needed
+      window.location.href = '/admin/moderation';
     } catch (err: any) {
+      console.error('Login failed:', err);
       setError(
         err.response?.data?.detail ||
-          'Login failed. Please check your credentials.'
+        'Invalid username or password. Please try again.'
       );
     } finally {
       setLoading(false);
@@ -41,67 +45,53 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="w-full max-w-md">
-        <div className="bg-card border border-border rounded-lg p-8 shadow-lg">
-          <div className="flex items-center justify-center mb-6">
-            <div className="bg-primary text-primary-foreground p-3 rounded-full">
-              <Lock size={28} />
-            </div>
+    <div className="min-h-[80vh] flex items-center justify-center px-4">
+      <div className="w-full max-w-sm p-8 bg-card rounded-xl border border-border shadow-sm">
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
+            <Lock size={24} />
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">Admin Login</h1>
+          <p className="text-muted-foreground text-sm mt-2 text-center">
+            Sign in to access moderation tools
+          </p>
+        </div>
+
+        {error && (
+          <div className="mb-6 p-3 bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm rounded-md text-center">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="Enter your username"
+            />
           </div>
 
-          <h1 className="text-2xl font-bold text-center text-foreground mb-2">
-            Admin Login
-          </h1>
-          <p className="text-center text-muted-foreground mb-6">
-            Sign in to access the moderation dashboard
-          </p>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+            />
+          </div>
 
-          {error && (
-            <div className="mb-6 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-100 p-4 rounded-lg flex items-start gap-3">
-              <AlertCircle size={20} className="flex-shrink-0 mt-0.5" />
-              <p className="text-sm">{error}</p>
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1">
-                Username
-              </label>
-              <input
-                type="text"
-                required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="Enter your username"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-1">
-                Password
-              </label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                placeholder="Enter your password"
-              />
-            </div>
-
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full mt-6"
-            >
-              {loading ? 'Signing in...' : 'Sign In'}
-            </Button>
-          </form>
-        </div>
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? 'Authenticating...' : 'Sign In'}
+          </Button>
+        </form>
       </div>
     </div>
   );
