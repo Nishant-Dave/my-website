@@ -27,11 +27,12 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*'] # Warning: Using '*' allows all domains, ideally set this to ['.vercel.app', 'localhost'] in production.
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    config('FRONTEND_URL', default='http://localhost:3000') # Allows dynamics assignment via Vercel Dashboard
 ]
 
 # Application definition
@@ -159,5 +160,19 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = 'dexternd9@gmail.com'
+EMAIL_HOST_USER = 'dexternd9@gmail.com'
 EMAIL_HOST_PASSWORD = 'ybkmcuqtjayrwenu'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# --- Production Security Settings ---
+if not DEBUG:
+    # Redirect all non-HTTPS requests to HTTPS
+    SECURE_SSL_REDIRECT = True
+    # Use secure cookies
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # HTTP Strict Transport Security
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
