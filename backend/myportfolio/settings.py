@@ -88,6 +88,21 @@ WSGI_APPLICATION = 'myportfolio.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+import os
+import shutil
+
+# Vercel bypass for SQLite read-only filesystem lock
+if os.environ.get('VERCEL') == '1' or os.environ.get('VERCEL_ENV'):
+    source_db = BASE_DIR / 'db.sqlite3'
+    target_db = '/tmp/db.sqlite3'
+    if source_db.exists() and not os.path.exists(target_db):
+        try:
+            shutil.copy2(source_db, target_db)
+        except Exception:
+            pass
+    # Override the DATABASE_URL environment variable to force decouple to read the /tmp database
+    os.environ['DATABASE_URL'] = f"sqlite:///{target_db}"
+
 DATABASES = {
     'default': dj_database_url.parse(config('DATABASE_URL'))
 }

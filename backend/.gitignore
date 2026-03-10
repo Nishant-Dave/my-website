@@ -7,7 +7,7 @@ venv/
 env/
 
 # Database
-*.sqlite3
+# *.sqlite3  # Allow db.sqlite3 to be committed constraint for Vercel
 
 # Environment variables
 .env
